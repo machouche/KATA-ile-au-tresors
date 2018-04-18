@@ -23,7 +23,7 @@ const start = () => {
     });
     store.gameData.gameTurn++;
   }
-  console.log('after: ',store.gameData);
+  console.log('after: ', store.gameData);
 };
 
 module.exports.start = start;

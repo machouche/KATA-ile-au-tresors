@@ -1,6 +1,6 @@
 const { cellType } = require('../gameActions/gameActions.js');
 
-const createGameMap = ({ width, height }) => {
+const _createGameMap = ({ width, height }) => {
   const map = new Array(height).fill(undefined).map(
     elem =>
       (elem = new Array(width).fill(undefined).map(cell => ({
@@ -12,7 +12,7 @@ const createGameMap = ({ width, height }) => {
   return map;
 };
 
-const setMountain = (value, gameData) => {
+const _setMountain = (value, gameData) => {
   const [, xAxis, yAxis] = value;
   const mountain = {
     xAxis: +xAxis,
@@ -22,7 +22,7 @@ const setMountain = (value, gameData) => {
   gameData.gameMap[yAxis][xAxis].type = cellType.MOUNTAIN;
 };
 
-const setTresor = (value, gameData) => {
+const _setTresor = (value, gameData) => {
   const [, xAxis, yAxis, count] = value;
   const tresor = {
     xAxis: +xAxis,
@@ -33,7 +33,7 @@ const setTresor = (value, gameData) => {
   gameData.gameMap[yAxis][xAxis].tresor = tresor;
 };
 
-const setHero = (value, gameData) => {
+const _setHero = (value, gameData) => {
   const [, name, xAxis, yAxis, orientation, sequenceString] = value;
   const sequence = sequenceString.split('');
   const hero = {
@@ -52,28 +52,28 @@ const setHero = (value, gameData) => {
   }
 };
 
-const setMapSize = (value, gameData) => {
+const _setMapSize = (value, gameData) => {
   const [, width, height] = value;
   gameData.mapSize.width = +width;
   gameData.mapSize.height = +height;
 };
 const initGame = ({ width, height, data, gameData }) => {
-  gameData.gameMap = createGameMap({ width: +width, height: +height });
+  gameData.gameMap = _createGameMap({ width: +width, height: +height });
 
   data.forEach(line => {
     const value = line.split(' - ');
     switch (value[0]) {
       case 'C':
-        setMapSize(value, gameData);
+        _setMapSize(value, gameData);
         break;
       case 'M':
-        setMountain(value, gameData);
+        _setMountain(value, gameData);
         break;
       case 'T':
-        setTresor(value, gameData);
+        _setTresor(value, gameData);
         break;
       case 'A':
-        setHero(value, gameData);
+        _setHero(value, gameData);
         break;
     }
   });
