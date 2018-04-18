@@ -13,7 +13,29 @@ const {
 const start = () => {
   console.log('starting..');
 
-  var text = fs.readFileSync(path.join(__dirname, 'data.txt'), 'utf-8');
+  const data = fs
+    .readFileSync(path.join(__dirname, 'data.txt'), 'utf-8')
+    .split('\n');
+
+  const [, width, height] = data.find(elem => elem[0] === 'C').split('-');
+
+  // data.forEach(line => {
+  //   const data = line.split(' - ');
+  //   switch (data[0]) {
+  //     case 'M':
+  //       console.log('mountains');
+  //       break;
+  //     case 'C':
+  //       console.log('map data');
+  //       break;
+  //     case 'T':
+  //       console.log('tresor');
+  //       break;
+  //     case 'A':
+  //       console.log('player');
+  //       break;
+  //   }
+  // });
 
   const mountains = [{ xAxis: 1, yAxis: 0 }, { xAxis: 2, yAxis: 1 }];
   const tresors = [
@@ -36,29 +58,43 @@ const start = () => {
     sequence: ['A', 'A', 'D', 'A', 'G', 'A'],
     tresorCount: 0
   };
-  let heroes = [lara];
-  const map = { width: 3, height: 4 };
+  let heroes = [jones];
 
-  const gameMap = new Array(map.height).fill(0).map(
-    elem =>
-      (elem = new Array(map.width).fill(0).map(cell => ({
-        type: cellType.VALLEY,
-        hasHero: false,
-        tresor: 0
-      })))
-  );
+  const createGameMap = ({ width, height }) => {
+    const mapi = new Array(height).fill(undefined).map(
+      elem =>
+        (elem = new Array(width).fill(undefined).map(cell => ({
+          type: cellType.VALLEY,
+          hasHero: false,
+          tresor: 0
+        })))
+    );
+    return mapi;
+  };
+
+  const gameMap = createGameMap({ width: +width, height: +height });
+
+  // const gameMap = new Array(map.height).fill(undefined).map(
+  //   elem =>
+  //     (elem = new Array(map.width).fill(undefined).map(cell => ({
+  //       type: cellType.VALLEY,
+  //       hasHero: false,
+  //       tresor: 0
+  //     })))
+  // );
 
   mountains.forEach(value => {
     gameMap[value.yAxis][value.xAxis] = {
       type: cellType.MOUNTAIN,
       hasHero: false,
-      tresor: 0
+      tresor: undefined
     };
   });
 
   tresors.forEach(value => {
-    gameMap[value.yAxis][value.xAxis].tresor = value.value;
+    gameMap[value.yAxis][value.xAxis].tresor = value;
   });
+
   let index = 0;
   const length = jones.sequence.length;
 
@@ -66,7 +102,10 @@ const start = () => {
     heroes = playTurn({ heroes, index, map: gameMap });
     index++;
   }
-  console.log(heroes[0]);
+
+  tresors.forEach(value => {
+    gameMap[value.yAxis][value.xAxis].tresor = value;
+  });
 };
 
 // const getGameData = () => {}; // read the file & clean data
@@ -74,11 +113,11 @@ const start = () => {
 // const createInitialGameMap = () => {}; // create the gameMap with the data of the file;
 
 //continue to iterate while max hero sequence is not over
-const gameLoop = () => {
-  while (currentTurn < maxPossibleTUrn) {
-    playTurn({ heroes, currentTurn, map });
-  }
-};
+// const gameLoop = () => {
+//   while (currentTurn < maxPossibleTUrn) {
+//     playTurn({ heroes, currentTurn, map });
+//   }
+// };
 
 // take heroes array and map over it
 const playTurn = ({ heroes, index, map }) =>
@@ -89,9 +128,9 @@ const playTurn = ({ heroes, index, map }) =>
       map
     });
     const currentCell = map[heroAfterMove.yAxis][heroAfterMove.xAxis];
-    if (currentCell.tresor) {
+    if (currentCell.tresor && currentCell.tresor.value) {
       heroAfterMove.tresorCount++;
-      currentCell.tresor--;
+      currentCell.tresor.value--;
     }
     return heroAfterMove;
   });
@@ -101,6 +140,7 @@ const extractGameData = gameMap => {
     width: gameMap[0].length,
     height: gameMap.length
   };
+
   gameMap.reduce((acc, current) => {});
 };
 
