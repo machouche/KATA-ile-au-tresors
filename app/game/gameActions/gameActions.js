@@ -31,12 +31,10 @@ const getNextPosition = (hero, map) => {
   }
 };
 
-const makeMove = ({ hero, action, map }) => {
+const _makeMove = ({ hero, action, map }) => {
   if (action === 'A') {
     const { xAxis, yAxis } = getNextPosition(hero, map);
-    // console.log( xAxis, yAxis );
-
-    return isMoveValid(map[yAxis][xAxis]) ? { ...hero, xAxis, yAxis } : hero;
+    return _isMoveValid(map[yAxis][xAxis]) ? { ...hero, xAxis, yAxis } : hero;
   } else {
     const { orientation } = hero;
     const newOrientation = getNextOrientation({
@@ -47,12 +45,12 @@ const makeMove = ({ hero, action, map }) => {
   }
 };
 
-const isMoveValid = cell => !(cell.type === cellType.MOUNTAIN || cell.hasHero);
+const _isMoveValid = cell => !(cell.type === cellType.MOUNTAIN || cell.hasHero);
 
 const playTurn = ({ heroes, index, map }) =>
   heroes.map(hero => {
     const { xAxis: previousX, yAxis: previousY } = hero;
-    const heroAfterMove = makeMove({
+    const heroAfterMove = _makeMove({
       hero,
       action: hero.sequence[index],
       map
@@ -84,7 +82,6 @@ const cellType = {
 module.exports = {
   getNextOrientation,
   getNextPosition,
-  makeMove,
   cardinalPoints,
   cellType,
   playTurn

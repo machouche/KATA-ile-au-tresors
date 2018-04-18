@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { store } = require('./store/store.js');
 const { playTurn } = require('./game/gameActions/gameActions.js');
-const { initGame } = require('./game/gameInit/gameInit.js');
+const { initGame, createOutputData } = require('./game/gameInit/gameInit.js');
 
 const start = () => {
   console.log('starting..');
@@ -23,7 +23,10 @@ const start = () => {
     });
     store.gameData.gameTurn++;
   }
-  console.log('after: ', store.gameData);
+
+  const output = createOutputData(store.gameData);
+
+  fs.writeFileSync(path.join(__dirname, 'output.txt'), output);
 };
 
 module.exports.start = start;

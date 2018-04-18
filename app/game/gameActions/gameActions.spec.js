@@ -4,7 +4,8 @@ const {
   getNextPosition,
   cardinalPoints,
   getNextOrientation,
-  makeMove
+  playTurn,
+  cellType
 } = require('./gameActions.js');
 
 describe('getNextOrientation  ', () => {
@@ -199,21 +200,59 @@ describe('getNextPosition', () => {
   });
 });
 
-describe('makeMove', () => {
-  const hero = {
-    name: 'indiana',
-    orientation: cardinalPoints.SOUTH,
-    xAxis: 2,
-    yAxis: 2
-  };
+describe('playTurn', () => {
+  it('should return updated hero array', () => {
+    const mockMap = new Array(3).fill(undefined).map(
+      elem =>
+        (elem = new Array(3).fill(undefined).map(cell => ({
+          type: cellType.VALLEY,
+          hasHero: false,
+          tresor: undefined
+        })))
+    );
 
-  const map = { width: 5, height: 5 };
+    mockMap[0][2].type = cellType.MOUNTAIN;
+    mockMap[1][0].tresor = { xAxis: 0, yAxis: 1, count: 2 };
+    mockMap[1][1].hasHero = true;
 
-  it('should change xAxis and/or yAxis of hero', () => {
+    const heroes = [
+      {
+        name: 'lara',
+        xAxis: 1,
+        yAxis: 1,
+        orientation: 'N',
+        sequence: ['A', 'A', 'D', 'A'],
+        tresorCount: 0
+      },
+      {
+        name: 'jones',
+        xAxis: 0,
+        yAxis: 0,
+        orientation: 'S',
+        sequence: ['A', 'A', 'D', 'A'],
+        tresorCount: 0
+      }
+    ];
+    const heroesAfterMove = playTurn({ heroes, index: 0, map: mockMap });
 
-  });
-
-  it('should change orientation of hero', () => {
-
+    const expected = [
+      {
+        name: 'lara',
+        xAxis: 1,
+        yAxis: 0,
+        orientation: 'N',
+        sequence: ['A', 'A', 'D', 'A'],
+        tresorCount: 0
+      },
+      {
+        name: 'jones',
+        xAxis: 0,
+        yAxis: 1,
+        orientation: 'S',
+        sequence: ['A', 'A', 'D', 'A'],
+        tresorCount: 1
+      }
+    ];
+    expect(heroesAfterMove).to.deep.equal(expected);
   });
 });
