@@ -1,37 +1,11 @@
 'use strict';
 const { expect } = require('chai');
 const {
-  personFactory,
   getNextPosition,
   cardinalPoints,
   getNextOrientation,
   makeMove
-} = require('./personFatory.js');
-
-describe('personFactory', () => {
-  const person = personFactory({
-    name: 'maxime',
-    orientation: cardinalPoints.SOUTH,
-    xAxis: 2,
-    yAxis: 1
-  });
-
-  it('should return a person, with name, orientation, yAxis', () => {
-    expect(person.name).to.equal('maxime');
-  });
-
-  it('should return a person orientation', () => {
-    expect(person.orientation).to.equal(cardinalPoints.SOUTH);
-  });
-
-  it('should return a person xAxis', () => {
-    expect(person.xAxis).to.equal(2);
-  });
-
-  it('should return a person yAxis', () => {
-    expect(person.xAxis).to.equal(2);
-  });
-});
+} = require('./gameActions.js');
 
 describe('getNextOrientation  ', () => {
   describe('when orientation is D', () => {
@@ -120,15 +94,13 @@ describe('getNextOrientation  ', () => {
 });
 
 describe('getNextPosition', () => {
-  const person = personFactory({
+  const person = {
     name: 'indiana',
     orientation: undefined,
     xAxis: 2,
     yAxis: 2
-  });
-  const map = new Array(5)
-  .fill(0)
-  .map(elem => (elem = new Array(5).fill(0)));
+  };
+  const map = new Array(5).fill(0).map(elem => (elem = new Array(5).fill(0)));
 
   it('should decrement yAxis when orientation is N', () => {
     const personTest = { ...person, orientation: cardinalPoints.NORTH };
@@ -200,8 +172,8 @@ describe('getNextPosition', () => {
       orientation: cardinalPoints.SOUTH
     };
     const mapTest = new Array(2)
-    .fill(0)
-    .map(elem => (elem = new Array(2).fill(0)));
+      .fill(0)
+      .map(elem => (elem = new Array(2).fill(0)));
 
     const axis = getNextPosition(personTest, mapTest);
     const { xAxis, yAxis } = personTest;
@@ -238,14 +210,10 @@ describe('makeMove', () => {
   const map = { width: 5, height: 5 };
 
   it('should change xAxis and/or yAxis of hero', () => {
-    const result = makeMove({ hero, action: 'A', map });
-    const expected = { ...hero, yAxis: 3 };
-    expect(result).to.deep.equal(expected);
+
   });
 
   it('should change orientation of hero', () => {
-    const result = makeMove({ hero, action: 'D', map });
-    const expected = { ...hero, orientation: cardinalPoints.WEST };
-    expect(result).to.deep.equal(expected);
+
   });
 });

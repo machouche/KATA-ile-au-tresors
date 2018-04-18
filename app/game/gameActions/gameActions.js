@@ -1,25 +1,3 @@
-const personFactory = ({ name, orientation, xAxis, yAxis }) => {
-  let _name = name;
-  let _orientation = orientation;
-  let _xAxis = xAxis;
-  let _yAxis = yAxis;
-
-  return {
-    get name() {
-      return name;
-    },
-    get orientation() {
-      return _orientation;
-    },
-    get xAxis() {
-      return _xAxis;
-    },
-    get yAxis() {
-      return _yAxis;
-    }
-  };
-};
-
 const getNextOrientation = ({ orientation, rotation }) => {
   if (rotation === 'D' || rotation === 'G') {
     switch (orientation) {
@@ -40,12 +18,12 @@ const getNextPosition = (hero, map) => {
   const { orientation, xAxis, yAxis } = hero;
   const width = map[0].length;
   const height = map.length;
-
   switch (orientation) {
     case cardinalPoints.NORTH:
       return { xAxis, yAxis: yAxis - 1 > 0 ? yAxis - 1 : 0 };
     case cardinalPoints.SOUTH:
-      return { xAxis, yAxis: yAxis + 1 >= height ? yAxis : yAxis + 1 };
+      const toto = { xAxis, yAxis: yAxis + 1 >= height ? yAxis : yAxis + 1 };
+      return toto;
     case cardinalPoints.EAST:
       return { yAxis, xAxis: xAxis + 1 >= width ? xAxis : xAxis + 1 };
     case cardinalPoints.WEST:
@@ -56,6 +34,8 @@ const getNextPosition = (hero, map) => {
 const makeMove = ({ hero, action, map }) => {
   if (action === 'A') {
     const { xAxis, yAxis } = getNextPosition(hero, map);
+    // console.log( xAxis, yAxis );
+
     return isMoveValid(map[yAxis][xAxis]) ? { ...hero, xAxis, yAxis } : hero;
   } else {
     const { orientation } = hero;
@@ -69,6 +49,28 @@ const makeMove = ({ hero, action, map }) => {
 
 const isMoveValid = cell => !(cell.type === cellType.MOUNTAIN || cell.hasHero);
 
+const playTurn = ({ heroes, index, map }) =>
+  heroes.map(hero => {
+    const { xAxis: previousX, yAxis: previousY } = hero;
+    const heroAfterMove = makeMove({
+      hero,
+      action: hero.sequence[index],
+      map
+    });
+    const { xAxis: newX, yAxis: newY } = heroAfterMove;
+
+    const newCell = map[heroAfterMove.yAxis][heroAfterMove.xAxis];
+    if (
+      newCell.tresor &&
+      newCell.tresor.count &&
+      (newX !== previousX || newY !== previousY)
+    ) {
+      heroAfterMove.tresorCount++;
+      newCell.tresor.count--;
+    }
+    return heroAfterMove;
+  });
+
 const cardinalPoints = {
   NORTH: 'N',
   SOUTH: 'S',
@@ -80,10 +82,10 @@ const cellType = {
   VALLEY: 'V'
 };
 module.exports = {
-  personFactory,
   getNextOrientation,
   getNextPosition,
   makeMove,
   cardinalPoints,
-  cellType
+  cellType,
+  playTurn
 };
