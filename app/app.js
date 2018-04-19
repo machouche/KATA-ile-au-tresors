@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { store } = require('./store/store.js');
 const { playTurn } = require('./game/gameActions/gameActions.js');
-const { initGame, createOutputData } = require('./game/gameInit/gameInit.js');
+const { initGame } = require('./game/gameInit/gameInit.js');
+const { createOutputData } = require('./game/outputData/createOutput.js');
 
 const start = () => {
   console.log('starting..');
@@ -13,7 +14,7 @@ const start = () => {
     .split('\n');
   const [, width, height] = data.find(elem => elem[0] === 'C').split('-');
 
-  initGame({ width, height, data, gameData: store.gameData });
+  initGame({ width: +width, height: +height, data, gameData: store.gameData });
 
   while (store.gameData.gameTurn < store.gameData.gameLength) {
     store.gameData.heroes = playTurn({
