@@ -10,7 +10,7 @@ const start = () => {
   console.log('starting..');
 
   const data = fs
-    .readFileSync(path.join(__dirname, 'data.txt'), 'utf-8')
+    .readFileSync(path.join(process.cwd(), 'data.txt'), 'utf-8')
     .split('\n');
   const [, width, height] = data.find(elem => elem[0] === 'C').split('-');
 
@@ -27,7 +27,7 @@ const start = () => {
 
   const output = createOutputData(store.gameData);
 
-  fs.writeFileSync(path.join(__dirname, 'output.txt'), output);
+  fs.writeFileSync(path.join(process.cwd(), 'output.txt'), output);
 };
 
 module.exports.start = start;
