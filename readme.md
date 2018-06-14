@@ -31,7 +31,7 @@ M​ - 1 - 1
 Enfin, le plus important pour les aventuriers, les trésors. Plusieurs trésors peuvent être présents sur
 une même case; le nombre de trésors sur une même case est indiqué dans le fichier d’entrée de
 l’exercice par la ligne suivante :
-# {T comme Trésor} - {Axe horizontal} - {Axe vertical} - {Nb. de trésors}
+{T comme Trésor} - {Axe horizontal} - {Axe vertical} - {Nb. de trésors}
 T​ - 0 - 3 - 2
 
 
@@ -82,7 +82,7 @@ M​ - 2 - 1
 {T comme Trésor} - {Axe horizontal} - {Axe vertical} - {Nb. de trésors
 restants}
 T​ - 1 - 3 - 2
-# {A comme Aventurier} - {Nom de l’aventurier} - {Axe horizontal} - {Axe
+{A comme Aventurier} - {Nom de l’aventurier} - {Axe horizontal} - {Axe
 vertical} - {Orientation} - {Nb. trésors ramassés}
 A​ - Lara - 0 - 3 - S - 3
 
